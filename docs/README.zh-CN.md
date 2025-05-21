@@ -1,6 +1,6 @@
-# DeepSearch V2
+# DeepSearch
 
-DeepSearch V2 是一个基于 FastAPI 和 LangChain 构建的智能搜索和问答系统。该系统采用多智能体架构，通过协调器、研究者和报告者三个智能体的协作，为用户提供高质量的搜索结果和回答。
+DeepSearch 是一个基于 FastAPI 和 LangChain 构建的智能搜索和问答系统。该系统采用多智能体架构，通过协调器、研究者和报告者三个智能体的协作，为用户提供高质量的搜索结果和回答。
 
 ## 功能特点
 
@@ -26,7 +26,7 @@ DeepSearch V2 是一个基于 FastAPI 和 LangChain 构建的智能搜索和问�
 
 1. 克隆项目并进入项目目录：
 ```bash
-git clone [repository-url]
+git clone https://github.com/myersguo/deepsearch.git
 cd deepsearch
 ```
 
@@ -50,16 +50,29 @@ OPENAI_API_KEY=your_openai_api_key
 TAVILY_API_KEY=your_tavily_api_key
 ```
 
+5. 安装前端依赖：
+```bash
+cd web
+pnpm install
+```
+
 ## 使用方法
 
-1. 启动服务器：
+1. 启动后端服务器：
 ```bash
 python main.py
 ```
 
-2. 服务器将在 `http://localhost:8081` 启动
+2. 在新的终端窗口中，启动前端应用：
+```bash
+cd web
+pnpm dev
+```
 
-3. API 端点：
+3. 后端服务器将在 `http://localhost:8081` 运行
+4. 前端界面将在 `http://localhost:5173` 运行
+
+5. API 端点：
 - POST `/api/query`
   - 请求体：
     ```json
@@ -78,20 +91,57 @@ python main.py
 
 ## 项目结构
 
+
 ```
-deepsearch/
-├── app/
-│   ├── config/
-│   ├── core/
-│   │   ├── agents/
-│   │   └── types.py
-├── web/
-├── tests/
-├── docs/
-│   └── README.zh-CN.md
+.
+├── README.md
+├── app
+│   ├── __init__.py
+│   ├── api
+│   │   └── __init__.py
+│   ├── config
+│   │   └── settings.py
+│   └── core
+│       ├── __init__.py
+│       ├── agents
+│       │   ├── __init__.py
+│       │   ├── base.py
+│       │   ├── coordinator.py
+│       │   ├── reporter.py
+│       │   └── researcher.py
+│       ├── llm.py
+│       ├── prompts
+│       │   ├── __init__.py
+│       │   ├── coordinator.md
+│       │   ├── reporter.md
+│       │   └── researcher.md
+│       ├── search_engine.py
+│       └── types.py
+├── docs
 ├── main.py
 ├── requirements.txt
-└── README.md
+└── web
+    ├── package.json
+    ├── pnpm-lock.yaml
+    ├── public
+    │   └── index.html
+    ├── src
+    │   ├── App.css
+    │   ├── App.tsx
+    │   ├── components
+    │   │   ├── ChatInterface.css
+    │   │   ├── ChatInterface.tsx
+    │   │   ├── InputArea.css
+    │   │   ├── InputArea.tsx
+    │   │   ├── MarkdownRenderer.css
+    │   │   ├── MarkdownRenderer.tsx
+    │   │   ├── Message.css
+    │   │   ├── Message.tsx
+    │   │   ├── MessageList.css
+    │   │   └── MessageList.tsx
+    │   ├── index.css
+    │   └── index.tsx
+    └── tsconfig.json
 ```
 
 ## 开发说明

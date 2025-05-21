@@ -26,7 +26,7 @@ DeepSearch is an intelligent search and Q&A system built with FastAPI and LangCh
 
 1. Clone the repository and navigate to the project directory:
 ```bash
-git clone https://github.com/myersguo/deepsearch
+git clone https://github.com/myersguo/deepsearch.git
 cd deepsearch
 ```
 
@@ -46,20 +46,37 @@ pip install -r requirements.txt
 4. Configure environment variables:
 Create a `.env` file and set the necessary environment variables:
 ```
-OPENAI_API_KEY=your_openai_api_key
-TAVILY_API_KEY=your_tavily_api_key
+OPENAI_API_KEY=
+OPENAI_MODEL_NAME=
+TAVILY_API_KEY=
+OPENAI_BASE_URL=
+PROJECT_NAME=DeepSearch
+DEBUG=true
+```
+
+5. Install web dependencies:
+```bash
+cd web
+pnpm install
 ```
 
 ## Usage
 
-1. Start the server:
+1. Start the backend server:
 ```bash
 python main.py
 ```
 
-2. The server will start at `http://localhost:8081`
+2. In a new terminal, start the web application:
+```bash
+cd web
+pnpm dev
+```
 
-3. API Endpoint:
+3. The backend server will be available at `http://localhost:8081`
+4. The web interface will be available at `http://localhost:5173`
+
+5. API Endpoint:
 - POST `/api/query`
   - Request body:
     ```json
