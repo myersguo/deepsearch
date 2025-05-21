@@ -32,7 +32,8 @@ class ResearcherAgent(BaseAgent):
 
     async def process(self, state: State) -> Command:
         query = state.get("query")
-        prompt_content = self.prompt_template.render(query=query)
+        locale = state.get("locale", "en")
+        prompt_content = self.prompt_template.render(query=query, locale=locale)
 
         search_tool = Tool(
             name="web_search_tool",
@@ -54,7 +55,7 @@ class ResearcherAgent(BaseAgent):
         result_messages = search_result.get("messages", [])
         ret = self.parse_message(result_messages)
 
-        return Command(goto="reporter_node", update={"search_result": ret})
+        return Command(goto="reporter_node", update={"search_result": ret, "locale": locale})
 
     def parse_message(self, messages):
         ret = {}

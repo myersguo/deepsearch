@@ -25,9 +25,10 @@ class ReporterAgent(BaseAgent):
 
     async def process(self, state: State) -> Command:
         query = state.get("query")
+        locale = state.get("locale", "en")
         search_result = state.get("search_result")
         prompt_content = self.prompt_template.render(
-            query=query, search_results=search_result
+            query=query, search_results=search_result, locale=locale
         )
 
         agent = create_react_agent(
@@ -40,4 +41,4 @@ class ReporterAgent(BaseAgent):
         report = await agent.ainvoke({"input": messages[0].content})
         ai_content = report.get("messages", [])[-1].content
 
-        return Command(goto="END", update={"reporter_result": ai_content})
+        return Command(goto="END", update={"reporter_result": ai_content, "locale": locale})

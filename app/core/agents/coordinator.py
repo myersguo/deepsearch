@@ -23,13 +23,19 @@ class CoordinatorAgent(BaseAgent):
         self.prompt_template = jinja2.Template(template_content)
         
     async def process(self, state: State) -> Command:
-        prompt_content = self.prompt_template.render(query=state.get("query"))
+        locale = state.get("locale", "en")
+        prompt_content = self.prompt_template.render(query=state.get("query"), locale=locale)
         chain =  self.llm | JsonOutputParser()
         messages = [SystemMessage(content=prompt_content), HumanMessage(content=state.get("query"))]
         result = await chain.ainvoke(messages)
+        
+        # Use the detected locale from the LLM response, or fall back to the current locale
+        detected_locale = result.get("locale", locale)
+        
         return Command(
             goto="researcher_node" if result.get("coordinator") == "requires_research" else "END",
             update={"coordinator": result.get("coordinator"),
                     "response": result.get("response"),
-                                              }
+                    "locale": detected_locale
+                   }
         )
