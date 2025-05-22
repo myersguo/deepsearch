@@ -1,13 +1,15 @@
-from langgraph.prebuilt import create_react_agent
+import os
+
+import jinja2
+from langchain_core.messages import HumanMessage, SystemMessage, AIMessage, ToolMessage
 from langchain_core.tools import Tool
+from langgraph.prebuilt import create_react_agent
+from langgraph.types import Command
+
+from app.core.agents.base import BaseAgent
 from app.core.llm import get_llm
 from app.core.search_engine import SearchEngine
-from langchain_core.messages import HumanMessage, SystemMessage, AIMessage, ToolMessage
-from langgraph.types import Command
-from app.core.agents.base import BaseAgent
 from app.core.types import State
-import os
-import jinja2
 
 
 class ResearcherAgent(BaseAgent):
@@ -33,7 +35,7 @@ class ResearcherAgent(BaseAgent):
     async def process(self, state: State) -> Command:
         query = state.get("query")
         locale = state.get("locale", "en")
-        prompt_content = self.prompt_template.render(query=query, locale=locale)
+        prompt_content = self.prompt_template.render(query=query, locale=locale, CURRENT_TIME=state.get("current_time"))
 
         search_tool = Tool(
             name="web_search_tool",
@@ -49,7 +51,9 @@ class ResearcherAgent(BaseAgent):
         messages = [
             SystemMessage(content=prompt_content),
             HumanMessage(content=query),
+            HumanMessage(content=state.get("search_keyword")),
         ]
+        print(f"search_keyword: {state.get('search_keyword')}")
 
         search_result = await agent.ainvoke({"messages": messages})
         result_messages = search_result.get("messages", [])

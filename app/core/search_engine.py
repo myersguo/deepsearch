@@ -1,11 +1,12 @@
 from tavily import TavilyClient
+
 from app.config.settings import settings
 
 
 class SearchEngine:
     def __init__(self):
         self.client = TavilyClient(api_key=settings.TAVILY_API_KEY)
-    
+
     def search(self, query: str, max_results: int = 10):
         """
         Execute a search query using Tavily.

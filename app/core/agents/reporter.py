@@ -1,13 +1,13 @@
-from langchain_core.prompts import PromptTemplate
-from langgraph.prebuilt import create_react_agent
-from langchain_core.output_parsers import StrOutputParser
-from app.core.llm import get_llm
-from langchain_core.messages import HumanMessage, SystemMessage
 import os
+
 import jinja2
-from app.core.types import State
-from app.core.agents.base import BaseAgent
+from langchain_core.messages import SystemMessage
+from langgraph.prebuilt import create_react_agent
 from langgraph.types import Command
+
+from app.core.agents.base import BaseAgent
+from app.core.llm import get_llm
+from app.core.types import State
 
 
 class ReporterAgent(BaseAgent):
@@ -28,7 +28,7 @@ class ReporterAgent(BaseAgent):
         locale = state.get("locale", "en")
         search_result = state.get("search_result")
         prompt_content = self.prompt_template.render(
-            query=query, search_results=search_result, locale=locale
+            query=query, search_results=search_result, locale=locale, CURRENT_TIME=state.get("current_time")
         )
 
         agent = create_react_agent(
